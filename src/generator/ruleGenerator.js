@@ -107,7 +107,7 @@ function generate(input) {
   const add = (t, storyId) => tasks.push({ id: `T-${tasks.length + 1}`, title: t.title, description: t.desc, type: t.type, storyId });
 
   add({ title: 'UX flows and wireframes', type: 'design', desc: 'Map the end-to-end journey and produce wireframes for all new screens.' }, 'US-1');
-  add({ title: 'Core data model and migrations', type: 'database', desc: 'Define tables, relations and indexes for the feature’s main entities.' }, 'US-1');
+  add({ title: 'Core data model and schema', type: 'database', desc: 'Define tables, relations and indexes for the feature’s main entities.' }, 'US-1');
   add({ title: 'Core REST API endpoints', type: 'backend', desc: 'CRUD endpoints with validation, error handling and authorisation checks.' }, 'US-1');
   add({ title: 'Core feature screens', type: 'frontend', desc: 'Main screens connected to the API with loading, empty and error states.' }, 'US-1');
   stories.filter((st) => st.module === 'manage').forEach((st) => {

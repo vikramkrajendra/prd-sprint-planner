@@ -1,7 +1,8 @@
 // Orchestrates the end-to-end workflow:
-// input → generation (AI / rules) → output, recording a timing trace for each step.
+// input → generation (AI / rules) → smart logic layer → output, recording a timing trace for each step.
 const { validateWorkflowInput } = require('./validation');
 const { generateDraft } = require('./generator');
+const { applyLogic } = require('./logic');
 
 async function timed(trace, step, fn) {
   const t0 = Date.now();
@@ -25,6 +26,13 @@ async function runWorkflow(body, { receivedAt = Date.now() } = {}) {
   });
   delete draft.__trace;
 
+  const plan = await timed(trace, 'logic', () => {
+    const p = applyLogic(draft, input);
+    p.__trace = { detail: `${p.summary.dependencyCount} deps · ${p.summary.sprintCount} sprints` };
+    return p;
+  });
+  delete plan.__trace;
+
   const result = {
     id: null,
     createdAt: new Date().toISOString(),
@@ -33,7 +41,10 @@ async function runWorkflow(body, { receivedAt = Date.now() } = {}) {
     input,
     prd: draft.prd,
     stories: draft.stories,
-    tasks: draft.tasks,
+    tasks: plan.tasks,
+    sprints: plan.sprints,
+    risk: plan.risk,
+    summary: plan.summary,
   };
   trace.push({ step: 'output', ms: 0, status: 'ok' });
   result.pipeline = trace;
