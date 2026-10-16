@@ -35,7 +35,7 @@ function detectPersonas(text, modules) {
 // Extracts the core capability from the first clause of the idea.
 // "Let customers book salon appointments online, ..." → action "book salon appointments online"
 // "Add real-time team chat with channels"            → action "use real-time team chat with channels"
-const PERSONA_WORDS = PERSONAS.map(([re]) => re).join('|');
+const PERSONA_WORDS = [...PERSONAS.map(([re]) => re), ...Object.values(SECONDARY).map(([re]) => re)].join('|');
 function parseCore(idea) {
   let clause = idea.split(/[.,;:\n]| and (?=[a-z]+ (?:can|should|must|will)\b)/i)[0].trim();
   let isVerbPhrase = false;

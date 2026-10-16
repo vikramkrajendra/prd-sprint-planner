@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin · PRD → Sprint Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▤</span>
+      <div>
+        <strong>Admin dashboard</strong>
+        <small>Monitor usage and manage workflows</small>
+      </div>
+    </div>
+    <nav class="topnav">
+      <button class="link-btn" id="refreshBtn" type="button">Refresh</button>
+      <a href="/" class="link-btn">Back to planner</a>
+    </nav>
+  </header>
+
+  <main class="admin">
+    <div class="form-error" id="adminError" role="alert" hidden></div>
+
+    <section aria-label="Key metrics">
+      <div class="stats" id="kpis"></div>
+    </section>
+
+    <section class="admin-grid">
+      <div class="panel">
+        <h3>Workflows per day <span class="muted small">last 14 days</span></h3>
+        <div id="perDay" class="bars-v" role="img" aria-label="Workflows created per day"></div>
+      </div>
+      <div class="panel">
+        <h3>Generation source</h3>
+        <div id="source"></div>
+        <h3 style="margin-top:18px">Delivery risk</h3>
+        <div id="risk"></div>
+      </div>
+      <div class="panel">
+        <h3>Task priority mix</h3>
+        <div id="priority"></div>
+        <h3 style="margin-top:18px">Task types</h3>
+        <div id="types"></div>
+      </div>
+      <div class="panel">
+        <h3>System health</h3>
+        <dl id="system" class="kv"></dl>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h3>Workflows</h3>
+        <div class="filters">
+          <input type="search" id="q" placeholder="Search title or idea…" aria-label="Search workflows" />
+          <select id="fStatus" aria-label="Filter by status">
+            <option value="">All statuses</option>
+            <option value="new">New</option>
+            <option value="in_review">In review</option>
+            <option value="approved">Approved</option>
+            <option value="archived">Archived</option>
+          </select>
+          <select id="fRisk" aria-label="Filter by risk">
+            <option value="">All risk levels</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select id="fSource" aria-label="Filter by source">
+            <option value="">All sources</option>
+            <option value="ai">AI</option>
+            <option value="rules">Rule-based</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Feature</th><th>Source</th><th>Tasks</th><th>Points</th><th>Sprints</th><th>Risk</th><th>Time</th><th>Created</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button type="button" class="secondary" id="prev">← Previous</button>
+        <span id="pageInfo" class="muted"></span>
+        <button type="button" class="secondary" id="next">Next →</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h3>Activity log</h3>
+        <select id="fLevel" aria-label="Filter log level">
+          <option value="">All levels</option>
+          <option value="info">Info</option>
+          <option value="warn">Warnings</option>
+          <option value="error">Errors</option>
+        </select>
+      </div>
+      <ul id="activity" class="activity"></ul>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

@@ -10,6 +10,7 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 
 router.get('/api/health', () => ({ status: 'ok', time: new Date().toISOString() }));
 require('./src/routes/workflows').register(router);
+require('./src/routes/admin').register(router);
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);

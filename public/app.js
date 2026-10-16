@@ -242,7 +242,7 @@
         <td><span class="badge type">${esc(t.type)}</span></td>
         <td><span class="badge ${t.priority.level}">${t.priority.level}</span> <span class="mono">${t.priority.score}</span><span class="why">${esc(t.priority.reasons.join('; '))}</span></td>
         <td class="mono">${t.effort.points} pts<span class="why">≈${t.effort.hours}h · ${esc(t.effort.reasons.join('; '))}</span></td>
-        <td class="mono">${t.dependsOn.length ? t.dependsOn.map(esc).join(', ') : '—'}</td>
+        <td class="mono">${t.dependsOn.length ? t.dependsOn.map((d) => `<span style="white-space:nowrap">${esc(d)}</span>`).join(', ') : '—'}</td>
         <td class="mono">S${t.sprint}</td>
       </tr>`).join('') || '<tr><td colspan="7" class="muted">No tasks match the filters.</td></tr>';
     };

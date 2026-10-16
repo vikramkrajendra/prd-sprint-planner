@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
+const { LEVELS } = require('./logic/priority');
 
 function openDatabase(file) {
   if (file !== ':memory:') fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -198,7 +199,7 @@ function getWorkflow(id) {
       title: t.title,
       description: t.description,
       type: t.type,
-      priority: { level: t.priority_level, score: t.priority_score, reasons: parse(t.priority_reasons, []) },
+      priority: { level: t.priority_level, label: LEVELS.find((l) => l.level === t.priority_level)?.label, score: t.priority_score, reasons: parse(t.priority_reasons, []) },
       effort: { points: t.effort_points, hours: t.effort_hours, reasons: parse(t.effort_reasons, []) },
       dependsOn: parse(t.depends_on, []),
       sprint: t.sprint_number,

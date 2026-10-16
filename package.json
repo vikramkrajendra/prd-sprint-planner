@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node --no-warnings server.js",
     "dev": "node --watch --no-warnings server.js",
-    "test": "node --no-warnings --test tests/*.test.js"
+    "test": "node --no-warnings --test tests/*.test.js",
+    "seed": "node --no-warnings scripts/seed.js"
   },
   "engines": {
     "node": ">=18"

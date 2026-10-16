@@ -113,6 +113,7 @@ textarea:focus, input:focus, select:focus { outline: 2px solid var(--accent); ou
 /* Tables */
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
+td.mono:first-child, td.mono:last-child { white-space: nowrap; }
 th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-3); position: sticky; top: 0; }
 tr:last-child td { border-bottom: 0; }
@@ -139,7 +140,7 @@ td .why { display: block; font-size: 12px; color: var(--ink-3); margin-top: 2px;
 .task-card .tc-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; align-items: center; }
 
 /* Risk */
-.risk-list { list-style: none; padding: 0; margin: 0; }
+.card .risk-list { list-style: none; padding: 0; margin: 0; }
 .risk-list li { padding: 8px 0; border-bottom: 1px solid var(--line); }
 .risk-list li:last-child { border-bottom: 0; }
 .meter { height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 6px 0; }
@@ -157,7 +158,13 @@ td .why { display: block; font-size: 12px; color: var(--ink-3); margin-top: 2px;
 .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 10; }
 
 @media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; padding: 16px; }
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .panel { padding: 16px; min-width: 0; }
+  .row { grid-template-columns: 1fr 1fr; }
+  .row > div:first-child { grid-column: 1 / -1; }
+  .pipeline li { min-width: 30%; }
+  .brand small { display: none; }
+  .result-head { flex-direction: column; }
   .input-panel { position: static; }
   .grid-2 { grid-template-columns: 1fr; }
   .topbar { padding: 12px 16px; }
