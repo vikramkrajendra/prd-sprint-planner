@@ -1,0 +1,19 @@
+{
+  "name": "prd-sprint-planner",
+  "version": "1.0.0",
+  "description": "AI-powered workflow system that turns feature ideas into PRDs, user stories, engineering tasks and prioritized sprint plans.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --no-warnings server.js",
+    "dev": "node --watch --no-warnings server.js",
+    "test": "node --no-warnings --test tests/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^11.7.0"
+  },
+  "keywords": ["prd", "sprint-planning", "ai", "workflow-automation"],
+  "license": "MIT"
+}
