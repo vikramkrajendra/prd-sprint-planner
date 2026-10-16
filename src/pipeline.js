@@ -1,8 +1,9 @@
 // Orchestrates the end-to-end workflow:
-// input → generation (AI / rules) → smart logic layer → output, recording a timing trace for each step.
+// input → generation (AI / rules) → smart logic layer → database → output, recording a timing trace for each step.
 const { validateWorkflowInput } = require('./validation');
 const { generateDraft } = require('./generator');
 const { applyLogic } = require('./logic');
+const store = require('./db');
 
 async function timed(trace, step, fn) {
   const t0 = Date.now();
@@ -46,8 +47,24 @@ async function runWorkflow(body, { receivedAt = Date.now() } = {}) {
     risk: plan.risk,
     summary: plan.summary,
   };
-  trace.push({ step: 'output', ms: 0, status: 'ok' });
+  // Storage: persist the workflow, its tasks and sprints, plus an activity log entry.
+  const t0 = Date.now();
+  trace.push({ step: 'storage', ms: 0, status: 'ok' }, { step: 'output', ms: 0, status: 'ok' });
   result.pipeline = trace;
+  result.id = store.saveWorkflow(result, Date.now() - receivedAt);
+  trace.find((t) => t.step === 'storage').ms = Date.now() - t0;
+  result.processingMs = Date.now() - receivedAt;
+  result.status = 'new';
+
+  if (draft.fallbackReason && input.useAI) {
+    store.logActivity({ workflowId: result.id, level: 'warn', event: 'generation.fallback', message: draft.fallbackReason });
+  }
+  store.logActivity({
+    workflowId: result.id,
+    event: 'workflow.created',
+    message: `“${result.prd.title}” — ${plan.summary.taskCount} tasks, ${plan.summary.sprintCount} sprints, ${plan.risk.level} risk`,
+    meta: { source: draft.source, ms: result.processingMs },
+  });
   return result;
 }
 

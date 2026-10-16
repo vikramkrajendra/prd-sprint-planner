@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const config = require('./src/config');
 const { Router, sendJson, serveStatic } = require('./src/http');
+const store = require('./src/db');
 
 const router = new Router();
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -27,14 +28,19 @@ const server = http.createServer(async (req, res) => {
     }
   } catch (err) {
     console.error(`[error] ${req.method} ${url.pathname}:`, err.message);
+    if ((err.status || 500) >= 500) store.logActivity({ level: 'error', event: 'api.error', message: `${req.method} ${url.pathname}: ${err.message}` });
+    else if (url.pathname === '/api/workflows' && req.method === 'POST') store.logActivity({ level: 'warn', event: 'input.rejected', message: err.message });
     if (!res.writableEnded) sendJson(res, err.status || 500, { error: err.message || 'Server error' });
   } finally {
     if (url.pathname.startsWith('/api/')) console.log(`${req.method} ${url.pathname} ${res.statusCode} ${Date.now() - started}ms`);
   }
 });
 
+const driver = store.init();
+store.logActivity({ event: 'server.started', message: `Server started (db: ${driver}, AI: ${config.openaiKey ? config.openaiModel : 'off'})` });
+
 server.listen(config.port, '0.0.0.0', () => {
-  console.log(`PRD → Sprint Planner running on http://localhost:${config.port}`);
+  console.log(`PRD → Sprint Planner running on http://localhost:${config.port} (db: ${driver})`);
 });
 
 module.exports = server;
