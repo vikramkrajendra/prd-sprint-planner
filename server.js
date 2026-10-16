@@ -8,6 +8,7 @@ const router = new Router();
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 router.get('/api/health', () => ({ status: 'ok', time: new Date().toISOString() }));
+require('./src/routes/workflows').register(router);
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
@@ -17,7 +18,10 @@ const server = http.createServer(async (req, res) => {
       const route = router.match(req.method, url.pathname);
       if (!route) return sendJson(res, 404, { error: 'Not found' });
       const result = await route.handler({ req, res, url, params: route.params, query: Object.fromEntries(url.searchParams) });
-      if (!res.writableEnded) sendJson(res, result?.__status || 200, result);
+      if (!res.writableEnded) {
+        const { __status, ...payload } = result || {};
+        sendJson(res, __status || 200, payload);
+      }
     } else if (!serveStatic(PUBLIC_DIR, url.pathname, res)) {
       sendJson(res, 404, { error: 'Not found' });
     }
