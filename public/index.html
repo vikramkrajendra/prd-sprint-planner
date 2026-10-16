@@ -1,1 +1,139 @@
-<!doctype html><title>PRD → Sprint Planner</title><h1>PRD → Sprint Planner</h1><p>Server is running.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRD → Sprint Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▤</span>
+      <div>
+        <strong>PRD → Sprint Planner</strong>
+        <small>Feature idea in, execution plan out</small>
+      </div>
+    </div>
+    <nav class="topnav">
+      <button class="link-btn" id="historyBtn" type="button">History</button>
+      <a href="/admin" class="link-btn">Admin dashboard</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <!-- INPUT PANEL -->
+    <section class="panel input-panel" aria-labelledby="inputTitle">
+      <h2 id="inputTitle">New feature</h2>
+      <form id="ideaForm" novalidate>
+        <label for="featureIdea">Feature idea <span class="req">*</span></label>
+        <textarea id="featureIdea" name="featureIdea" rows="6" maxlength="2000" required
+          placeholder="e.g. Let customers book appointments online, pay a deposit, and get SMS reminders before the visit."></textarea>
+        <div class="hint"><span id="charCount">0</span>/2000 · at least 20 characters</div>
+
+        <label for="context">Product context <span class="opt">optional</span></label>
+        <input id="context" name="context" maxlength="300" placeholder="e.g. B2C salon booking app, 5k monthly users" />
+
+        <div class="row">
+          <div>
+            <label for="businessPriority">Business priority</label>
+            <select id="businessPriority" name="businessPriority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <div>
+            <label for="sprintCapacity">Points / sprint</label>
+            <input id="sprintCapacity" name="sprintCapacity" type="number" min="5" max="100" value="20" />
+          </div>
+          <div>
+            <label for="sprintLengthWeeks">Sprint length</label>
+            <select id="sprintLengthWeeks" name="sprintLengthWeeks">
+              <option value="1">1 week</option>
+              <option value="2" selected>2 weeks</option>
+              <option value="3">3 weeks</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="check"><input type="checkbox" id="useAI" checked /> Use AI generation when available</label>
+
+        <div class="form-error" id="formError" role="alert" hidden></div>
+        <button class="primary" id="submitBtn" type="submit">Generate plan</button>
+      </form>
+
+      <div class="samples">
+        <span>Try a sample:</span>
+        <button type="button" class="chip" data-sample="0">Appointment booking</button>
+        <button type="button" class="chip" data-sample="1">Team chat</button>
+        <button type="button" class="chip" data-sample="2">Expense reports</button>
+      </div>
+    </section>
+
+    <!-- OUTPUT PANEL -->
+    <section class="panel output-panel" aria-live="polite">
+      <ol class="pipeline" id="pipeline" aria-label="Processing pipeline">
+        <li data-step="input">Input</li>
+        <li data-step="api">Backend API</li>
+        <li data-step="generation">AI generation</li>
+        <li data-step="logic">Logic layer</li>
+        <li data-step="storage">Database</li>
+        <li data-step="output">Output</li>
+      </ol>
+
+      <div id="emptyState" class="empty">
+        <h3>Your plan will appear here</h3>
+        <p>Describe a feature on the left. The system writes a PRD, breaks it into user stories and engineering tasks, then scores priority, estimates effort, detects dependencies and allocates work to sprints.</p>
+      </div>
+
+      <div id="loading" class="loading" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loadingText">Generating PRD…</p>
+      </div>
+
+      <div id="result" hidden>
+        <div class="result-head">
+          <div>
+            <h2 id="resTitle"></h2>
+            <p class="meta" id="resMeta"></p>
+          </div>
+          <div class="result-actions">
+            <button type="button" class="secondary" id="exportBtn">Export Markdown</button>
+          </div>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button role="tab" class="tab active" data-tab="overview">Overview</button>
+          <button role="tab" class="tab" data-tab="prd">PRD</button>
+          <button role="tab" class="tab" data-tab="stories">User stories</button>
+          <button role="tab" class="tab" data-tab="tasks">Tasks</button>
+          <button role="tab" class="tab" data-tab="sprints">Sprint plan</button>
+        </div>
+
+        <div class="tab-panel" id="tab-overview"></div>
+        <div class="tab-panel" id="tab-prd" hidden></div>
+        <div class="tab-panel" id="tab-stories" hidden></div>
+        <div class="tab-panel" id="tab-tasks" hidden></div>
+        <div class="tab-panel" id="tab-sprints" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HISTORY DRAWER -->
+  <aside class="drawer" id="historyDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <h3>Saved workflows</h3>
+      <button type="button" class="link-btn" id="closeHistory" aria-label="Close history">✕</button>
+    </div>
+    <input type="search" id="historySearch" placeholder="Search workflows…" />
+    <ul id="historyList" class="history-list"></ul>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
