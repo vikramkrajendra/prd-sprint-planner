@@ -1,10 +1,10 @@
 // Sprint allocation: greedy capacity-based planning.
 // Tasks are taken in dependency-safe order (highest priority first among ready tasks)
 // and placed in the earliest sprint that (a) has capacity and (b) is not before any
-// prerequisite. Large prerequisites (≥5 points) must finish in an earlier sprint.
+// prerequisite. Large prerequisites (≥8 points) must finish in an earlier sprint.
 const { topoSort } = require('./dependencies');
 
-const LARGE_PREREQ = 5;
+const LARGE_PREREQ = 8;
 
 function allocateSprints(tasks, stories, { capacity, sprintLengthWeeks }) {
   const order = topoSort(tasks, (t) => t.priority.score);
